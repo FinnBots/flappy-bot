@@ -149,7 +149,7 @@ console.log('[flappy-bot] build', BUILD_TAG);
    NEVER commit/deploy as false without explicit Founder confirmation
    in that run's own output. Byte-count (wc -c) every deploy.
    ============================================================ */
-const TEST_MODE = true;   // <-- master switch. Stays true until Founder confirms go-live.
+const TEST_MODE = false;   // <-- master switch. Stays true until Founder confirms go-live.
                           // Controls RPC + network together (four-value pattern). true = local validator.
 
 const CFG = TEST_MODE ? {
