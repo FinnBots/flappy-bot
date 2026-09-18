@@ -389,9 +389,17 @@ function render(alpha){
   ctx.save(); ctx.translate(offX,offY); ctx.scale(scale,scale);
   ctx.beginPath();ctx.rect(0,0,W,H);ctx.clip();
   let sx=0,sy=0; if(shake>0){sx=(Math.random()*2-1)*shake;sy=(Math.random()*2-1)*shake;shake*=.86;if(shake<.3)shake=0;} ctx.translate(sx,sy);
-  // dusk sky
-  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#6d5763');g.addColorStop(.6,'#8a6f76');g.addColorStop(1,'#c99a86');
+  // dusk sky — deep plum up top fading to a peach horizon
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#3e323a');g.addColorStop(.45,'#7a5f6a');g.addColorStop(.8,'#c98f76');g.addColorStop(1,'#f2b183');
   ctx.fillStyle=g;ctx.fillRect(-20,-20,W+40,H+40);
+  // soft sun low on the horizon
+  const sun=ctx.createRadialGradient(W*0.72,H*0.66,4,W*0.72,H*0.66,84);
+  sun.addColorStop(0,'rgba(255,214,150,.55)');sun.addColorStop(1,'rgba(255,214,150,0)');
+  ctx.fillStyle=sun;ctx.fillRect(0,0,W,H);
+  // drifting cloud band
+  ctx.fillStyle='rgba(255,240,225,.10)';const cOff=(dist*0.15)%120;
+  for(let x=-120;x<W+120;x+=120){const cx=x-cOff;ctx.fillRect(cx,118,60,10);ctx.fillRect(cx+20,110,30,8);}
   // parallax bots
   bgOff=(bgOff+.3)%84;ctx.fillStyle='rgba(255,255,255,.05)';
   for(let x=-84;x<W+84;x+=84)for(let y=80;y<H-GROUND;y+=150){const bx=x-bgOff;ctx.fillRect(bx,y,26,26);ctx.fillRect(bx+7,y-7,4,7);ctx.fillRect(bx+15,y-7,4,7);}
