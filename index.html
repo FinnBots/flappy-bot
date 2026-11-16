@@ -942,8 +942,18 @@ function reset(){
   syncAction();
 }
 function ramp(a,b){const t=Math.min(G.score/PARAMS.rampGates,1);return a+(b-a)*t;}
+/* EVERY GAP MUST BE REACHABLE FROM THE ONE BEFORE (2026-11-16). At full speed the time between two columns is ~0.44 s,
+   in which the Bot can climb at most flap×T; an unclamped draw sometimes put the next gap higher than that, a wall no
+   player could fly (an exhaustive per-frame search found no way through). The clamp keeps each jump inside REACH of
+   the Bot's own limits plus the room the gaps give, so a run ends by the player's mistake, never the course's. */
+const REACH=0.7;
 function spawnPipe(x){const gap=ramp(PARAMS.gapStart,PARAMS.gapFloor);const m=54;
-  const cy=m+gap/2+rnd()*(H-GROUND-m*2-gap);G.pipes.push({x,px:x,gap,cy,scored:false});}
+  let cy=m+gap/2+rnd()*(H-GROUND-m*2-gap);
+  const prev=G.pipes[G.pipes.length-1];
+  if(prev){const T=Math.max(0,ramp(PARAMS.spaceStart,PARAMS.spaceFloor)-PIPE_W-2*BIRD_R)/ramp(PARAMS.speedStart,PARAMS.speedMax),
+    room=Math.min(gap,prev.gap)-2*BIRD_R;
+    cy=Math.max(prev.cy-room-REACH*PARAMS.flap*T,Math.min(prev.cy+room+REACH*PARAMS.maxFall*T,cy));}
+  G.pipes.push({x,px:x,gap,cy,scored:false});}
 
 function doFlap(){
   audio();
