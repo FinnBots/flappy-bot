@@ -684,6 +684,7 @@ body.is-portrait .fb-bot{ width:20px; height:20px; }
     <div id="overOverlay">
       <div class="card" id="overCard" role="dialog" aria-modal="true">
         <div class="big" id="oScore">0</div>
+        <p class="ovStats">Flight <b id="ovFlight">0s</b> · Flaps <b id="ovFlaps">0</b></p>
         <div class="prize" id="ovPrize"></div>
         <div class="pending" id="ovPending" hidden>Reward arrives with the next weekly $OIL batch — not instant.</div>
         <ul id="ovTerms" hidden></ul>
@@ -930,7 +931,7 @@ function setMode(v){ G.mode=v; G.phase=(v==='dead')?'dead':'play'; }
 
 function newRun(seed){
   G={ phase:'play', mode:'playing', seed:((seed>>>0)||1),
-      bird:{y:H*0.42,py:H*0.42,vy:0,rot:0}, pipes:[], score:0, dist:0, acc:0,
+      bird:{y:H*0.42,py:H*0.42,vy:0,rot:0}, pipes:[], score:0, dist:0, acc:0, secs:0, flaps:0,
       inFlap:false };
   spawnPipe(W+40);
   return G;
@@ -957,8 +958,8 @@ function spawnPipe(x){const gap=ramp(PARAMS.gapStart,PARAMS.gapFloor);const m=54
 
 function doFlap(){
   audio();
-  if(G.mode==='ready'){setMode('playing');G.bird.vy=-PARAMS.flap;blip('flap');syncAction();return;}
-  if(G.mode==='playing'){G.bird.vy=-PARAMS.flap;blip('flap');return;}
+  if(G.mode==='ready'){setMode('playing');G.bird.vy=-PARAMS.flap;G.flaps=(G.flaps||0)+1;blip('flap');syncAction();return;}
+  if(G.mode==='playing'){G.bird.vy=-PARAMS.flap;G.flaps=(G.flaps||0)+1;blip('flap');return;}
 }
 /* The DOM half's ONLY control: raise the pulse and let the sim consume it on
    its own tick. A tap used to call the sim directly, so the single input this
@@ -993,7 +994,7 @@ function stepGame(s, dtMs){
   if(G.mode!=='playing'){ G.acc=0; return ev; }
   let dt=Math.min(dtMs,250)/1000;
   G.acc+=dt; let g=0;
-  while(G.acc>=STEP && g++<8){ step(STEP); G.acc-=STEP; if(G.mode!=='playing') break; }
+  while(G.acc>=STEP && g++<8){ step(STEP); G.secs+=STEP; G.acc-=STEP; if(G.mode!=='playing') break; }   /* secs: game time flown, for the ending card */
   return ev;
 }
 function cRect(cx,cy,r,rx,ry,rw,rh){const nx=Math.max(rx,Math.min(cx,rx+rw)),ny=Math.max(ry,Math.min(cy,ry+rh));const dx=cx-nx,dy=cy-ny;return dx*dx+dy*dy<r*r;}
@@ -1101,6 +1102,10 @@ function showGameOver(){
   /* #oScore holds the number ALONE — the shared stickiness layer parses its
      textContent, so any prose in here would be read as part of the score. */
   document.getElementById('oScore').textContent = score;
+  /* the card's OWN stats: the shared ending screen counts these up as its tally (verify-outro, 2026-11-16) */
+  const mmss=s=>{s=Math.round(s);return s<60?s+'s':Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+  document.getElementById('ovFlight').textContent = mmss(G.secs||0);
+  document.getElementById('ovFlaps').textContent = G.flaps||0;
   document.getElementById('ovPrize').textContent = qualified
     ? `\u2713 you earned ${CFG.REWARD_OIL} OIL`
     : `${PARAMS.threshold-score} more gates to earn ${CFG.REWARD_OIL} OIL`;
