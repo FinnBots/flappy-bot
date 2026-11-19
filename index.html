@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" id="fb-csp" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self' data: https://finnstergram.com; img-src 'self' data: blob: https://arweave.net https://*.arweave.net https://finnstergram.com; connect-src 'self' https://finnbots-rpc.mart-kin1000.workers.dev http://127.0.0.1:8899 https://cloudflareinsights.com https://finnbots-events.finnstergram.com https://finnbots.github.io; media-src 'self' data: blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'none'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" id="fb-csp" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; font-src 'self' data: https://finnstergram.com; img-src 'self' data: blob: https://arweave.net https://*.arweave.net https://finnstergram.com; connect-src 'self' https://finnbots-rpc.finnstergram.com http://127.0.0.1:8899 https://cloudflareinsights.com https://finnbots-events.finnstergram.com https://finnbots.github.io; media-src 'self' data: blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'none'; manifest-src 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" data-fb-vp="1">
 <title>Flappy Bot — earn $OIL, no Bot needed</title>
 <!--fb:share-->
@@ -738,7 +738,7 @@ const CFG = TEST_MODE ? {
   BOT_IMG_URL: 'assets/hero/bot-2969.png'
 } : {
   NETWORK: 'mainnet',
-  RPC: 'https://finnbots-rpc.mart-kin1000.workers.dev',            // Cloudflare Worker proxy — never Helius direct
+  RPC: 'https://finnbots-rpc.finnstergram.com',            // Cloudflare Worker proxy — never Helius direct
   MEMO_PROGRAM: 'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr',
   FAUCET_ADDRESS: 'FfUf31sPDqjV3f7HBLCJ8ra9GZXVQe6jW4kchxnEGrHa', // dedicated faucet wallet — claims (SOL + memo) land here
   CLAIM_SOL: 0.005, CLAIM_LAMPORTS: 5000000,                       // MUST equal scanner EARN_CLAIM_LAMPORTS
